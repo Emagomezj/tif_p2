@@ -1,0 +1,915 @@
+{
+	"info": {
+		"_postman_id": "f6afdff7-f2d5-48cf-a596-e1fa50638b5b",
+		"name": "TIF_P2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36010639"
+	},
+	"item": [
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/users"
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5a75fdfc-99ff-4fd7-82db-2f9f657c96b6_202511091941"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Many",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"5939b6eb-9ed3-4ac0-8175-079545b02f45_202511092240\",\"5cfcef4f-a24f-4807-8ceb-d43b89236763_202511092240\",\"988f2c37-f9ce-4aeb-a347-96dfacc7639d_202511092240\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/many"
+					},
+					"response": []
+				},
+				{
+					"name": "New User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Emanuel\",\r\n    \"apellido\": \"Gómez\",\r\n    \"email\": \"emanuel@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"contraseña123\",\r\n    \"fechaNac\": \"1995-08-24\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/products/"
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"nombre\": \"Emanuel\",\r\n    \"apellido\": \"Gómez\",\r\n    \"email\": \"emanuel@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"contraseña123\",\r\n    \"fechaNac\": \"1995-08-24\"\r\n  },\r\n  {\r\n    \"nombre\": \"Laura\",\r\n    \"apellido\": \"Martínez\",\r\n    \"email\": \"laura.martinez@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"password456\",\r\n    \"fechaNac\": \"1990-03-15\"\r\n  },\r\n  {\r\n    \"nombre\": \"Carlos\",\r\n    \"apellido\": \"Rodríguez\",\r\n    \"email\": \"carlos.rodriguez@example.com\",\r\n    \"rol\": \"ADMIN\",\r\n    \"password\": \"securepass789\",\r\n    \"fechaNac\": \"1988-11-07\"\r\n  },\r\n  {\r\n    \"nombre\": \"Ana\",\r\n    \"apellido\": \"López\",\r\n    \"email\": \"ana.lopez@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"mipassword123\",\r\n    \"fechaNac\": \"1993-06-22\"\r\n  },\r\n  {\r\n    \"nombre\": \"Diego\",\r\n    \"apellido\": \"Hernández\",\r\n    \"email\": \"diego.hernandez@example.com\",\r\n    \"rol\": \"MODERATOR\",\r\n    \"password\": \"diego2024\",\r\n    \"fechaNac\": \"1992-01-30\"\r\n  },\r\n  {\r\n    \"nombre\": \"Sofía\",\r\n    \"apellido\": \"García\",\r\n    \"email\": \"sofia.garcia@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"sofiapass321\",\r\n    \"fechaNac\": \"1997-09-14\"\r\n  },\r\n  {\r\n    \"nombre\": \"Javier\",\r\n    \"apellido\": \"Pérez\",\r\n    \"email\": \"javier.perez@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"javier654\",\r\n    \"fechaNac\": \"1985-12-03\"\r\n  },\r\n  {\r\n    \"nombre\": \"Isabel\",\r\n    \"apellido\": \"Sánchez\",\r\n    \"email\": \"isabel.sanchez@example.com\",\r\n    \"rol\": \"ADMIN\",\r\n    \"password\": \"isabel789\",\r\n    \"fechaNac\": \"1991-04-18\"\r\n  },\r\n  {\r\n    \"nombre\": \"Miguel\",\r\n    \"apellido\": \"Ramírez\",\r\n    \"email\": \"miguel.ramirez@example.com\",\r\n    \"rol\": \"USER\",\r\n    \"password\": \"miguel123\",\r\n    \"fechaNac\": \"1994-07-29\"\r\n  },\r\n  {\r\n    \"nombre\": \"Elena\",\r\n    \"apellido\": \"Fernández\",\r\n    \"email\": \"elena.fernandez@example.com\",\r\n    \"rol\": \"MODERATOR\",\r\n    \"password\": \"elena456\",\r\n    \"fechaNac\": \"1989-02-11\"\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Basic Auth Check",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"laura.martinez@example.com\",\r\n\"password\": \"password456\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Update One",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Emanuel\",\r\n    \"roles\": [\"USER\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5a75fdfc-99ff-4fd7-82db-2f9f657c96b6_202511091941"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Many",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\"id\":\"5939b6eb-9ed3-4ac0-8175-079545b02f45_202511092240\",\r\n\"nombre\":\"Pepe pepito\"},{\"id\":\"5cfcef4f-a24f-4807-8ceb-d43b89236763_202511092240\",\"nombre\":\"Pepe pepito\"},{\"id\":\"988f2c37-f9ce-4aeb-a347-96dfacc7639d_202511092240\",\"nombre\":\"Pepe pepito\"}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/batch"
+					},
+					"response": []
+				},
+				{
+					"name": "Logic Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Many",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"5939b6eb-9ed3-4ac0-8175-079545b02f45_202511092240\",\"5cfcef4f-a24f-4807-8ceb-d43b89236763_202511092240\",\"988f2c37-f9ce-4aeb-a347-96dfacc7639d_202511092240\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/batch"
+					},
+					"response": []
+				},
+				{
+					"name": "Total Delete One",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/abs/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"abs",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Total Delete Many",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"5939b6eb-9ed3-4ac0-8175-079545b02f45_202511092240\",\"5cfcef4f-a24f-4807-8ceb-d43b89236763_202511092240\",\"988f2c37-f9ce-4aeb-a347-96dfacc7639d_202511092240\"]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/abs"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LIBROS",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/libros"
+					},
+					"response": []
+				},
+				{
+					"name": "Find By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/libros/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"libros",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "297db194-b2c9-11f0-a30a-08bfb81ce7ec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Many",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"4152b0a6-e6ae-41b3-b36a-c632a84de7da_202511102239\", \"a0788f00-5fd3-4518-b82b-41e4981d2ec5_202511102239\",\"4ae9e858-451e-43ef-af78-28ea260f1e64_202511102239\" ]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/libros/many"
+					},
+					"response": []
+				},
+				{
+					"name": "Create One",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isbn\": \"978-950-515-123-4\",\r\n  \"titulo\": \"El nombre del viento\",\r\n  \"autor\": \"Patrick Rothfuss\",\r\n  \"editorial\": \"Plaza & Janés\",\r\n  \"anioEdicion\": 2009,\r\n  \"clasificacionDewey\": \"813.6\",\r\n  \"estanteria\": \"Fantasía A1\",\r\n  \"idioma\": \"Español\",\r\n  \"existencias\": 5,\r\n  \"disponibles\": 5,\r\n  \"eliminado\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/libros"
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"isbn\": \"978-950-515-123-3\",\r\n    \"titulo\": \"El nombre del viento\",\r\n    \"autor\": \"Patrick Rothfuss\",\r\n    \"editorial\": \"Plaza & Janés\",\r\n    \"anioEdicion\": 2009,\r\n    \"clasificacionDewey\": \"813.6\",\r\n    \"estanteria\": \"Fantasía A1\",\r\n    \"idioma\": \"Español\",\r\n    \"existencias\": 5,\r\n    \"disponibles\": 5,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-987-580-045-6\",\r\n    \"titulo\": \"Cien años de soledad\",\r\n    \"autor\": \"Gabriel García Márquez\",\r\n    \"editorial\": \"Sudamericana\",\r\n    \"anioEdicion\": 1967,\r\n    \"clasificacionDewey\": \"863.64\",\r\n    \"estanteria\": \"Realismo Mágico B2\",\r\n    \"idioma\": \"Español\",\r\n    \"existencias\": 7,\r\n    \"disponibles\": 6,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-376-0494-7\",\r\n    \"titulo\": \"Don Quijote de la Mancha\",\r\n    \"autor\": \"Miguel de Cervantes\",\r\n    \"editorial\": \"Alfaguara\",\r\n    \"anioEdicion\": 1605,\r\n    \"clasificacionDewey\": \"863.3\",\r\n    \"estanteria\": \"Clásicos C3\",\r\n    \"idioma\": \"Español\",\r\n    \"existencias\": 4,\r\n    \"disponibles\": 4,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-0-452-28423-4\",\r\n    \"titulo\": \"1984\",\r\n    \"autor\": \"George Orwell\",\r\n    \"editorial\": \"Penguin\",\r\n    \"anioEdicion\": 1949,\r\n    \"clasificacionDewey\": \"823.912\",\r\n    \"estanteria\": \"Distopía D1\",\r\n    \"idioma\": \"Inglés\",\r\n    \"existencias\": 10,\r\n    \"disponibles\": 9,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-08-08812-1\",\r\n    \"titulo\": \"La sombra del viento\",\r\n    \"autor\": \"Carlos Ruiz Zafón\",\r\n    \"editorial\": \"Planeta\",\r\n    \"anioEdicion\": 2001,\r\n    \"clasificacionDewey\": \"863.64\",\r\n    \"estanteria\": \"Narrativa E2\",\r\n    \"idioma\": \"Español\",\r\n    \"existencias\": 6,\r\n    \"disponibles\": 5,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-376-0495-4\",\r\n    \"titulo\": \"Fahrenheit 451\",\r\n    \"autor\": \"Ray Bradbury\",\r\n    \"editorial\": \"Minotauro\",\r\n    \"anioEdicion\": 1953,\r\n    \"clasificacionDewey\": \"813.54\",\r\n    \"estanteria\": \"Ciencia Ficción F1\",\r\n    \"idioma\": \"Inglés\",\r\n    \"existencias\": 8,\r\n    \"disponibles\": 7,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-204-8324-2\",\r\n    \"titulo\": \"El principito\",\r\n    \"autor\": \"Antoine de Saint-Exupéry\",\r\n    \"editorial\": \"Salamandra\",\r\n    \"anioEdicion\": 1943,\r\n    \"clasificacionDewey\": \"843.912\",\r\n    \"estanteria\": \"Infantil G4\",\r\n    \"idioma\": \"Francés\",\r\n    \"existencias\": 15,\r\n    \"disponibles\": 15,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-253-1234-9\",\r\n    \"titulo\": \"Los pilares de la tierra\",\r\n    \"autor\": \"Ken Follett\",\r\n    \"editorial\": \"Plaza & Janés\",\r\n    \"anioEdicion\": 1989,\r\n    \"clasificacionDewey\": \"823.914\",\r\n    \"estanteria\": \"Histórica H3\",\r\n    \"idioma\": \"Inglés\",\r\n    \"existencias\": 9,\r\n    \"disponibles\": 8,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-233-5119-9\",\r\n    \"titulo\": \"Crónica de una muerte anunciada\",\r\n    \"autor\": \"Gabriel García Márquez\",\r\n    \"editorial\": \"Diana\",\r\n    \"anioEdicion\": 1981,\r\n    \"clasificacionDewey\": \"863.64\",\r\n    \"estanteria\": \"Realismo Mágico B3\",\r\n    \"idioma\": \"Español\",\r\n    \"existencias\": 5,\r\n    \"disponibles\": 5,\r\n    \"eliminado\": false\r\n  },\r\n  {\r\n    \"isbn\": \"978-84-9759-474-2\",\r\n    \"titulo\": \"El alquimista\",\r\n    \"autor\": \"Paulo Coelho\",\r\n    \"editorial\": \"Planeta\",\r\n    \"anioEdicion\": 1988,\r\n    \"clasificacionDewey\": \"869.3\",\r\n    \"estanteria\": \"Filosofía I1\",\r\n    \"idioma\": \"Portugués\",\r\n    \"existencias\": 6,\r\n    \"disponibles\": 6,\r\n    \"eliminado\": false\r\n  }\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/libros/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Update One",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"titulo\":\"prueba de update\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/libros/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"libros",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f45b885a-e880-4ede-914f-3d141e061348_202511102236"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Many",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\"id\": \"4152b0a6-e6ae-41b3-b36a-c632a84de7da_202511102239\",\"titulo\": \"Prueba Update Many\"}, {\"id\": \"a0788f00-5fd3-4518-b82b-41e4981d2ec5_202511102239\",\"titulo\": \"Prueba Update Many\"}, {\"id\": \"4ae9e858-451e-43ef-af78-28ea260f1e64_202511102239\",\"titulo\": \"Prueba Update Many\"}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/libros/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Logic Delete One",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isbn\": \"978-950-515-123-4\",\r\n  \"titulo\": \"El nombre del viento\",\r\n  \"autor\": \"Patrick Rothfuss\",\r\n  \"editorial\": \"Plaza & Janés\",\r\n  \"anioEdicion\": 2009,\r\n  \"clasificacionDewey\": \"813.6\",\r\n  \"estanteria\": \"Fantasía A1\",\r\n  \"idioma\": \"Español\",\r\n  \"existencias\": 5,\r\n  \"disponibles\": 5,\r\n  \"eliminado\": false\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/libros/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"libros",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f45b885a-e880-4ede-914f-3d141e061348_202511102236"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logic Delete Many",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"4152b0a6-e6ae-41b3-b36a-c632a84de7da_202511102239\", \"a0788f00-5fd3-4518-b82b-41e4981d2ec5_202511102239\",\"4ae9e858-451e-43ef-af78-28ea260f1e64_202511102239\" ]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/libros/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Total Delete One",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isbn\": \"978-950-515-123-4\",\r\n  \"titulo\": \"El nombre del viento\",\r\n  \"autor\": \"Patrick Rothfuss\",\r\n  \"editorial\": \"Plaza & Janés\",\r\n  \"anioEdicion\": 2009,\r\n  \"clasificacionDewey\": \"813.6\",\r\n  \"estanteria\": \"Fantasía A1\",\r\n  \"idioma\": \"Español\",\r\n  \"existencias\": 5,\r\n  \"disponibles\": 5,\r\n  \"eliminado\": false\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/libros/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"libros",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f45b885a-e880-4ede-914f-3d141e061348_202511102236"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Total Delete Many",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"4152b0a6-e6ae-41b3-b36a-c632a84de7da_202511102239\", \"a0788f00-5fd3-4518-b82b-41e4981d2ec5_202511102239\",\"4ae9e858-451e-43ef-af78-28ea260f1e64_202511102239\" ]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/libros/total"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PRESTAMOS",
+			"item": [
+				{
+					"name": "Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"fechaDevolucion\": \"2025-11-11\"}"
+						},
+						"url": "http://localhost:8080/api/prestamos"
+					},
+					"response": []
+				},
+				{
+					"name": "Get One",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/user/:uid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								"user",
+								":uid"
+							],
+							"variable": [
+								{
+									"key": "uid",
+									"value": "af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Libro",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/libro/:lid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								"libro",
+								":lid"
+							],
+							"variable": [
+								{
+									"key": "lid",
+									"value": "297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Estado",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/estado/:estado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								"estado",
+								":estado"
+							],
+							"variable": [
+								{
+									"key": "estado",
+									"value": "vencido"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vencidos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": "http://localhost:8080/api/prestamos/vencidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Many",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[1,2,3,4]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/prestamos/many"
+					},
+					"response": []
+				},
+				{
+					"name": "Create One",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/prestamos"
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\",\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\"},{\"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\",\"libroId\":\"297db194-b2c9-11f0-a30a-08bfb81ce7ec\"},{\"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\",\"libroId\":\"297db194-b2c9-11f0-a30a-08bfb81ce7ec\"}]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/prestamos/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Plazo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/:id/plazo?newPlazo=2025-06-10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								":id",
+								"plazo"
+							],
+							"query": [
+								{
+									"key": "newPlazo",
+									"value": "2025-06-10"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Estado",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"libroId\":\"297cf2f0-b2c9-11f0-a30a-08bfb81ce7ec\", \"userId\":\"af8f66c5-5a70-48f0-90e4-0373699efd74_202511092240\"}"
+						},
+						"url": "http://localhost:8080/api/prestamos/actualizar-estado"
+					},
+					"response": []
+				},
+				{
+					"name": "Update One",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"fechaDevolucion\": \"2025-11-11\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Many",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\"id\":2,\"fechaDevolucion\":\"2025-11-11\"},{\"id\":3,\"fechaDevolucion\":\"2025-11-11\"},{\"id\":4,\"fechaDevolucion\":\"2025-11-11\"}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/prestamos/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete One",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"fechaDevolucion\": \"2025-11-11\"}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/prestamos/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"prestamos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Many",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[2,3,4]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/prestamos/bulk"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

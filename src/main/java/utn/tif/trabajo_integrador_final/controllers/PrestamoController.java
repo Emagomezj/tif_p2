@@ -56,6 +56,15 @@ public class PrestamoController {
         }
     }
 
+    @GetMapping("/many")
+    public ResponseEntity<?> getManyById(@RequestBody List<String> ids) {
+        try {
+            return ResponseEntity.ok(prestamoService.getManyById(ids));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePrestamo(@PathVariable String id, @RequestBody Prestamo prestamo) {
         try {
@@ -94,7 +103,7 @@ public class PrestamoController {
         }
     }
 
-    @GetMapping("/usuario/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<?> getByUser(@PathVariable String userId) {
         try {
             return ResponseEntity.ok(prestamoService.getByUser(userId));

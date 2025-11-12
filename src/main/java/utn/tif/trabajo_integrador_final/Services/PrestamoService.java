@@ -41,7 +41,7 @@ public class PrestamoService {
             if (user == null || libro == null) {
                 throw new Exception("El usuario o el libro no existe");
             }
-            if (libro.getExistencias() > 0) {
+            if (libro.getDisponibles() > 0) {
                 libro.setExistencias(libro.getExistencias() - 1);
                 libroDAO.updateOne(libro);
                 prestamo.setFechaPrestamo(LocalDate.now());
@@ -73,7 +73,7 @@ public class PrestamoService {
                 if (user == null || libro == null) {
                     throw new Exception("El usuario o el libro no existe");
                 }
-                if (libro.getExistencias() > 0) {
+                if (libro.getDisponibles() > 0) {
                     libro.setExistencias(libro.getExistencias() - 1);
                     libros.add(libro);
                     prestamo.setFechaPrestamo(LocalDate.now());
@@ -81,7 +81,7 @@ public class PrestamoService {
                     prestamo.setFechaDevolucion(null);
                     prestamo.setEstado(EstadoPrestamo.ACTIVO.getValue());
                 } else {
-                    throw new Exception("No hay existencias disponibles del libro: " + libro.toString());
+                    throw new Exception("No hay existencias disponibles del libro: " + libro);
                 }
             }
             libroDAO.updateMany(libros);
@@ -110,19 +110,25 @@ public class PrestamoService {
     }
 
     public Prestamo updatePrestamo(String id, Prestamo prestamo) throws Exception {
-        if (prestamo.getId() == null) {
+        if (id == null) {
             throw new IllegalArgumentException("El ID del préstamo es obligatorio para actualizar");
         }
         Prestamo p = prestamoDAO.findById(id);
+        Libro libro = libroDAO.findById(prestamo.getLibroId());
+
         if (p == null) {
             throw new EntityNotFoundException("Prestamo inexistente");
+        }
+        if (libro == null) {
+            throw new EntityNotFoundException("Libro inexistente");
         }
         if(prestamo.getFechaDevolucion() != null) {
             p.setFechaDevolucion(prestamo.getFechaDevolucion());
             p.setEstado(EstadoPrestamo.DEVUELTO.getValue());
+            libro.setDisponibles(libro.getDisponibles() + 1);
         }
-
-        return prestamoDAO.updateOne(prestamo);
+        libroDAO.updateOne(libro);
+        return prestamoDAO.updateOne(p);
     }
 
     public List<Prestamo> updateManyPrestamos(List<Prestamo> prestamos) throws Exception {

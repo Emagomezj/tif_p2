@@ -27,7 +27,7 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
                 .libroId(rs.getString("libro_id"))
                 .fechaPrestamo(rs.getDate("fecha_prestamo").toLocalDate())
                 .fechaPlazo(rs.getDate("fecha_plazo").toLocalDate())
-                .fechaDevolucion(rs.getDate("fecha_devolucion").toLocalDate())
+                .fechaDevolucion(rs.getDate("fecha_devolucion") != null ? rs.getDate("fecha_devolucion").toLocalDate() : null)
                 .estado(rs.getString("estado"))
                 .build();
     }
@@ -138,7 +138,6 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
             try (PreparedStatement ps = conn.prepareStatement(query)) {
                 ps.setInt(1, Integer.parseInt(id));
-
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         prestamo = mapRowToPrestamo(rs);
@@ -427,6 +426,30 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
     }
 
     public List<Prestamo> findPrestamosVencidos() throws Exception {
+        List<Prestamo> list = new ArrayList<>();
+        try {
+            transactionManager.begin();
+            Connection conn = transactionManager.getConnection();
+
+            String query = "SELECT * FROM prestamos WHERE fecha_plazo < CURRENT_DATE";
+
+            try (PreparedStatement ps = conn.prepareStatement(query);
+                 ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    Prestamo prestamo = mapRowToPrestamo(rs);
+                    list.add(prestamo);
+                }
+            }
+
+            transactionManager.closeConnection();
+            return list;
+
+        } catch (SQLException e) {
+            throw new Exception("Error al buscar préstamos vencidos: " + e.getMessage(), e);
+        }
+    }
+    public List<Prestamo> findPrestamosVencidos_update() throws Exception {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
