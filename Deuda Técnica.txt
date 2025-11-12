@@ -1,0 +1,7 @@
+Deuda Técnica:
+Creación e integración de tablas de Autores y Editoriales
+Gestión de códigos de error en las respuestas
+AUTH
+Auth middleware
+Check de ids en endpoints
+Configurar y permitir Paginate, Filters y Sort en los DAOS
