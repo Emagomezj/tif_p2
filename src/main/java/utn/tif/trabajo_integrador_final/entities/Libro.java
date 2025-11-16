@@ -1,4 +1,4 @@
-package utn.tif.trabajo_integrador_final.models;
+package utn.tif.trabajo_integrador_final.entities;
 
 public class Libro {
     private String id;

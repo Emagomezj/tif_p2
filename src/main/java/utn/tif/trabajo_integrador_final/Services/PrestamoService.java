@@ -8,9 +8,10 @@ import utn.tif.trabajo_integrador_final.DAOS.LibroDAO;
 import utn.tif.trabajo_integrador_final.DAOS.PrestamoDAO;
 import utn.tif.trabajo_integrador_final.DAOS.UserDAO;
 import utn.tif.trabajo_integrador_final.exceptions.EntityNotFoundException;
-import utn.tif.trabajo_integrador_final.models.Libro;
-import utn.tif.trabajo_integrador_final.models.Prestamo;
-import utn.tif.trabajo_integrador_final.models.Usuario;
+import utn.tif.trabajo_integrador_final.entities.Libro;
+import utn.tif.trabajo_integrador_final.entities.Prestamo;
+import utn.tif.trabajo_integrador_final.entities.Usuario;
+import utn.tif.trabajo_integrador_final.exceptions.StockException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,85 +32,76 @@ public class PrestamoService {
     }
 
 
-    public Prestamo createPrestamo(Prestamo prestamo) throws Exception {
-        try{
+    public Prestamo createPrestamo(Prestamo prestamo)  {
+        if (prestamo.getUserId() == null || prestamo.getLibroId() == null) {
+            throw new IllegalArgumentException("El ID de usuario y libro son obligatorios");
+        }
+        Usuario user = userDAO.findById(prestamo.getUserId());
+        Libro libro = libroDAO.findById(prestamo.getLibroId());
+        if (user == null || libro == null) {
+            throw new EntityNotFoundException("El usuario o el libro no existe");
+        }
+        if (libro.getDisponibles() > 0) {
+            libro.setExistencias(libro.getExistencias() - 1);
+            libroDAO.updateOne(libro);
+            prestamo.setFechaPrestamo(LocalDate.now());
+            prestamo.setFechaPlazo(LocalDate.now().plusDays(30));
+            prestamo.setFechaDevolucion(null);
+            prestamo.setEstado(EstadoPrestamo.ACTIVO.getValue());
+            return prestamoDAO.save(prestamo);
+        } else {
+            throw new StockException("No hay existencias disponibles");
+        }
+    }
+
+    public List<Prestamo> bulkCreatePrestamos(List<Prestamo> prestamos)  {
+        if (prestamos == null || prestamos.isEmpty()) {
+            throw new IllegalArgumentException("La lista de préstamos no puede estar vacía");
+        }
+        ArrayList<Libro> libros = new ArrayList<>();
+        for (Prestamo prestamo : prestamos) {
             if (prestamo.getUserId() == null || prestamo.getLibroId() == null) {
                 throw new IllegalArgumentException("El ID de usuario y libro son obligatorios");
             }
             Usuario user = userDAO.findById(prestamo.getUserId());
             Libro libro = libroDAO.findById(prestamo.getLibroId());
             if (user == null || libro == null) {
-                throw new Exception("El usuario o el libro no existe");
+                throw new EntityNotFoundException("El usuario o el libro no existe");
             }
             if (libro.getDisponibles() > 0) {
                 libro.setExistencias(libro.getExistencias() - 1);
-                libroDAO.updateOne(libro);
+                libros.add(libro);
                 prestamo.setFechaPrestamo(LocalDate.now());
                 prestamo.setFechaPlazo(LocalDate.now().plusDays(30));
                 prestamo.setFechaDevolucion(null);
                 prestamo.setEstado(EstadoPrestamo.ACTIVO.getValue());
-                return prestamoDAO.save(prestamo);
             } else {
-                throw new Exception("No hay existencias disponibles");
+                throw new StockException("No hay existencias disponibles del libro: " + libro);
             }
-        } catch (Exception e) {
-            throw new Exception("Error al crear el prestamo: " + e.getMessage(), e);
         }
-
+        libroDAO.updateMany(libros);
+        return prestamoDAO.bulkCreate(prestamos);
     }
 
-    public List<Prestamo> bulkCreatePrestamos(List<Prestamo> prestamos) throws Exception {
-        try{
-            if (prestamos == null || prestamos.isEmpty()) {
-                throw new IllegalArgumentException("La lista de préstamos no puede estar vacía");
-            }
-            ArrayList<Libro> libros = new ArrayList<>();
-            for (Prestamo prestamo : prestamos) {
-                if (prestamo.getUserId() == null || prestamo.getLibroId() == null) {
-                    throw new IllegalArgumentException("El ID de usuario y libro son obligatorios");
-                }
-                Usuario user = userDAO.findById(prestamo.getUserId());
-                Libro libro = libroDAO.findById(prestamo.getLibroId());
-                if (user == null || libro == null) {
-                    throw new Exception("El usuario o el libro no existe");
-                }
-                if (libro.getDisponibles() > 0) {
-                    libro.setExistencias(libro.getExistencias() - 1);
-                    libros.add(libro);
-                    prestamo.setFechaPrestamo(LocalDate.now());
-                    prestamo.setFechaPlazo(LocalDate.now().plusDays(30));
-                    prestamo.setFechaDevolucion(null);
-                    prestamo.setEstado(EstadoPrestamo.ACTIVO.getValue());
-                } else {
-                    throw new Exception("No hay existencias disponibles del libro: " + libro);
-                }
-            }
-            libroDAO.updateMany(libros);
-            return prestamoDAO.bulkCreate(prestamos);
-        } catch (Exception e) {
-            throw new Exception("Error al crear los prestamo: " + e.getMessage(), e);
-        }
-    }
-
-    public Prestamo getById(String id) throws Exception {
+    public Prestamo getById(String id)  {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("El ID no puede estar vacío");
         }
         return prestamoDAO.findById(id);
     }
 
-    public List<Prestamo> getAll() throws Exception {
+    public List<Prestamo> getAll()  {
         return prestamoDAO.findAll();
     }
 
-    public List<Prestamo> getManyById(List<String> ids) throws Exception {
+    public List<Prestamo> getManyById(List<String> ids)  {
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("La lista de IDs no puede estar vacía");
         }
         return prestamoDAO.findMany(ids);
     }
 
-    public Prestamo updatePrestamo(String id, Prestamo prestamo) throws Exception {
+    public Prestamo updatePrestamo(String id, Prestamo prestamo)  {
         if (id == null) {
             throw new IllegalArgumentException("El ID del préstamo es obligatorio para actualizar");
         }
@@ -131,7 +123,7 @@ public class PrestamoService {
         return prestamoDAO.updateOne(p);
     }
 
-    public List<Prestamo> updateManyPrestamos(List<Prestamo> prestamos) throws Exception {
+    public List<Prestamo> updateManyPrestamos(List<Prestamo> prestamos)  {
         if (prestamos == null || prestamos.isEmpty()) {
             throw new IllegalArgumentException("La lista de préstamos no puede estar vacía");
         }
@@ -159,7 +151,7 @@ public class PrestamoService {
         }
     }
 
-    public void deletePrestamo(String id) throws Exception {
+    public void deletePrestamo(String id)  {
         if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("El ID del préstamo es obligatorio");
         }
@@ -170,40 +162,40 @@ public class PrestamoService {
         prestamoDAO.deleteOne(id);
     }
 
-    public void deleteManyPrestamos(List<String> ids) throws Exception {
+    public void deleteManyPrestamos(List<String> ids)  {
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("La lista de IDs no puede estar vacía");
         }
         prestamoDAO.deleteMany(ids);
     }
 
-    public List<Prestamo> getByUser(String userId) throws Exception {
+    public List<Prestamo> getByUser(String userId)  {
         if (userId == null || userId.isEmpty()) {
             throw new IllegalArgumentException("El ID de usuario es obligatorio");
         }
         return prestamoDAO.findByUserId(userId);
     }
 
-    public List<Prestamo> getByLibro(String libroId) throws Exception {
+    public List<Prestamo> getByLibro(String libroId)  {
         if (libroId == null || libroId.isEmpty()) {
             throw new IllegalArgumentException("El ID de libro es obligatorio");
         }
         return prestamoDAO.findByLibroId(libroId);
     }
 
-    public List<Prestamo> getByEstado(String estado) throws Exception {
+    public List<Prestamo> getByEstado(String estado)  {
         if (estado == null || estado.isEmpty()) {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
         return prestamoDAO.findByEstado(estado);
     }
 
-    public List<Prestamo> obtenerPrestamosVencidos() throws Exception {
-        return prestamoDAO.findPrestamosVencidos();
+    public List<Prestamo> obtenerPrestamosVencidos()  {
+        return prestamoDAO.findPrestamosVencidos_update();
     }
 
-    public List<Prestamo> updateEstado() throws Exception {
-        List<Prestamo> vencidos = prestamoDAO.findPrestamosVencidos();
+    public List<Prestamo> updateEstado()  {
+        List<Prestamo> vencidos = prestamoDAO.findPrestamosVencidos_update();
         ArrayList<Prestamo> ps = new ArrayList<>();
         for (Prestamo prestamo : vencidos) {
             prestamo.setEstado(EstadoPrestamo.VENCIDO.getValue());
@@ -212,7 +204,7 @@ public class PrestamoService {
         return prestamoDAO.updateMany(ps);
     }
 
-    public void modifyPlazo(int id, LocalDate newPlazo) throws Exception {
+    public void modifyPlazo(int id, LocalDate newPlazo)  {
         Prestamo p = prestamoDAO.findById(String.valueOf(id));
         if (p == null) {
             throw new EntityNotFoundException("Prestamo inexistente");

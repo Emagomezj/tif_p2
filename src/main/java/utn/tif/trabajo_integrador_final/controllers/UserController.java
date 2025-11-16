@@ -60,12 +60,8 @@ public class UserController {
     // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id) {
-        try {
-            UserResponseDTO user = userService.findById(id);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        UserResponseDTO user = userService.findById(id);
+        return ResponseEntity.ok(user);
     }
 
     // UPDATE ONE
@@ -74,77 +70,46 @@ public class UserController {
             @PathVariable String id,
             @RequestBody UserUpdateDTO dto
     ) {
-        try {
-            UserResponseDTO updated = userService.update(id, dto);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        UserResponseDTO updated = userService.update(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     // UPDATE MANY
     @PutMapping("/batch")
     public ResponseEntity<List<UserResponseDTO>> updateManyUsers(@RequestBody List<UserUpdateDTO> dtos) {
-        try {
-            List<UserResponseDTO> updatedUsers = userService.updateMany(dtos);
-            return ResponseEntity.ok(updatedUsers);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        List<UserResponseDTO> updatedUsers = userService.updateMany(dtos);
+        return ResponseEntity.ok(updatedUsers);
     }
 
-    //BASIC AUTH
     @PostMapping("/login")
     public ResponseEntity<HashMap<String, Object>> login( @RequestBody Map<String, String> credentials) {
-        try{
-            String email = credentials.get("email");
-            String password = credentials.get("password");
-            HashMap<String, Object> response = userService.checkAuth(email, password);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        HashMap<String, Object> response = userService.checkAuth(email, password);
+        return ResponseEntity.ok(response);
     }
 
-    // DELETE ONE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        try {
-            userService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        userService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // DELETE MANY
     @DeleteMapping("/batch")
     public ResponseEntity<Void> deleteManyUsers(@RequestBody List<String> ids) {
-        try {
-            userService.deleteMany(ids);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        userService.deleteMany(ids);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/abs/{id}")
     public ResponseEntity<Void> totalDeleteUser(@PathVariable String id) {
-        try {
-            userService.totalDeleteOne(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        userService.totalDeleteOne(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/abs")
     public ResponseEntity<Void> totalDeleteManyUsers(@RequestBody List<String> ids) {
-        try {
-            userService.totalDeleteMany(ids);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        userService.totalDeleteMany(ids);
+        return ResponseEntity.noContent().build();
     }
 }

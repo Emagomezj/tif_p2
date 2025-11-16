@@ -1,5 +1,5 @@
 package utn.tif.trabajo_integrador_final.DAOS;
-import utn.tif.trabajo_integrador_final.models.Usuario;
+import utn.tif.trabajo_integrador_final.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import utn.tif.trabajo_integrador_final.utils.CustomTransactionManager;
@@ -43,7 +43,7 @@ public class UserDAO implements GenericDAO<Usuario> {
     }
 
     @Override
-    public Usuario save(Usuario entity) throws Exception {
+    public Usuario save(Usuario entity)  {
         try{
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -95,13 +95,13 @@ public class UserDAO implements GenericDAO<Usuario> {
             return entity;
         }catch (SQLException e){
             transactionManager.rollback();
-            e.printStackTrace();
-            throw new Exception("Error al guardar el usuario: "+ e.getMessage(), e);
+            //e.printStackTrace();
+            throw new RuntimeException("Error al guardar el usuario: "+ e.getMessage(), e);
         }
 
     }
     @Override
-    public List<Usuario> bulkCreate(List<Usuario> entities) throws Exception{
+    public List<Usuario> bulkCreate(List<Usuario> entities) {
         List<Usuario> saved = new ArrayList<>();
         try{
             transactionManager.begin();
@@ -161,11 +161,44 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al bulkCreate usuarios: " + e.getMessage(), e);
+            throw new RuntimeException("Error al bulkCreate usuarios: " + e.getMessage(), e);
         }
     }
+
+    public Usuario iFindById(String id) {
+        try{
+            transactionManager.begin();
+            Connection conn = transactionManager.getConnection();
+            String query = "SELECT * FROM usuarios WHERE id = ?";
+            Usuario u = null;
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if(rs.next()){
+                        u = mapRowToUsuario(rs);
+                    }
+                }
+                if (u != null) {
+                    String sqlRoles = "SELECT rol FROM roles_usuario WHERE user_id = ?";
+                    try (PreparedStatement ps1 = conn.prepareStatement(sqlRoles)) {
+                        ps1.setString(1, id);
+                        try (ResultSet rs = ps1.executeQuery()) {
+                            List<String> roles = new ArrayList<>();
+                            while (rs.next()) roles.add(rs.getString("rol"));
+                            u.setRoles(roles);
+                        }
+                    }
+                }
+            }
+            transactionManager.closeConnection();
+            return u;
+        } catch (SQLException e){
+            throw new RuntimeException("Error al buscar el usuario: " + e.getMessage(), e);
+        }
+    }
+
     @Override
-    public Usuario findById(String id) throws Exception {
+    public Usuario findById(String id)  {
         try{
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -193,11 +226,11 @@ public class UserDAO implements GenericDAO<Usuario> {
             transactionManager.closeConnection();
             return u;
         } catch (SQLException e){
-            throw new Exception("Error al buscar el usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar el usuario: " + e.getMessage(), e);
         }
     }
     @Override
-    public List<Usuario> findAll() throws Exception {
+    public List<Usuario> findAll()  {
         List<Usuario> list = new ArrayList<>();
         try{
             transactionManager.begin();
@@ -222,11 +255,11 @@ public class UserDAO implements GenericDAO<Usuario> {
             transactionManager.closeConnection();
             return list;
         } catch (SQLException e){
-            throw new Exception("Error al buscar el usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar el usuario: " + e.getMessage(), e);
         }
     }
     @Override
-    public List<Usuario> findMany(List<String> ids) throws Exception {
+    public List<Usuario> findMany(List<String> ids)  {
         List<Usuario> list = new ArrayList<>();
         if(ids.isEmpty()) return list;
         try {
@@ -257,10 +290,10 @@ public class UserDAO implements GenericDAO<Usuario> {
             transactionManager.closeConnection();
             return list;
         } catch (SQLException e) {
-            throw new Exception("Error al buscar el usuarios: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar el usuarios: " + e.getMessage(), e);
         }
     }
-    public Usuario findByEmail(String email) throws Exception {
+    public Usuario findByEmail(String email)  {
         try{
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -285,16 +318,16 @@ public class UserDAO implements GenericDAO<Usuario> {
                     }
                 }
             }catch (SQLException e){
-                throw new Exception("Error al buscar el usuario: " + e.getMessage(), e);
+                throw new RuntimeException("Error al buscar el usuario: " + e.getMessage(), e);
             }
             transactionManager.closeConnection();
             return u;
         }catch (SQLException e){
-            throw new Exception("Error al buscar el usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar el usuario: " + e.getMessage(), e);
         }
     }
     @Override
-    public Usuario updateOne(Usuario entity) throws Exception {
+    public Usuario updateOne(Usuario entity)  {
         try {
             System.out.println("Entra a updateOne");
             transactionManager.begin();
@@ -343,19 +376,19 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            e.printStackTrace();
-            throw new Exception("Error al actualizar usuario: " + e.getMessage(), e);
+            //e.printStackTrace();
+            throw new RuntimeException("Error al actualizar usuario: " + e.getMessage(), e);
         }
     }
     @Override
-    public List<Usuario> updateMany(List<Usuario> entities) throws Exception {
+    public List<Usuario> updateMany(List<Usuario> entities)  {
         List<Usuario> updated = new ArrayList<>();
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
 
             for (Usuario u : entities) {
-                updateOne(u); // cada updateOne ya usa la conexión actual
+                updateOne(u);
                 updated.add(u);
             }
 
@@ -364,11 +397,11 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (Exception e) {
             transactionManager.rollback();
-            throw new Exception("Error al actualizar muchos usuarios: " + e.getMessage(), e);
+            throw new RuntimeException("Error al actualizar muchos usuarios: " + e.getMessage(), e);
         }
     }
 
-    public void totalDeleteOne(String id) throws Exception {
+    public void totalDeleteOne(String id)  {
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -387,12 +420,12 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al borrar usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Error al borrar usuario: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void deleteOne(String id) throws Exception {
+    public void deleteOne(String id)  {
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -412,12 +445,12 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al eliminar lógicamente usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar lógicamente usuario: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void deleteMany(List<String> ids) throws Exception {
+    public void deleteMany(List<String> ids)  {
         if (ids == null || ids.isEmpty()) return;
 
         try {
@@ -438,10 +471,10 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al eliminar lógicamente usuarios: " + e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar lógicamente usuarios: " + e.getMessage(), e);
         }
     }
-    public void totalDeleteMany(List<String> ids) throws Exception {
+    public void totalDeleteMany(List<String> ids)  {
         if (ids == null || ids.isEmpty()) return;
         try {
             transactionManager.begin();
@@ -464,7 +497,7 @@ public class UserDAO implements GenericDAO<Usuario> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al borrar muchos usuarios: " + e.getMessage(), e);
+            throw new RuntimeException("Error al borrar muchos usuarios: " + e.getMessage(), e);
         }
     }
 }

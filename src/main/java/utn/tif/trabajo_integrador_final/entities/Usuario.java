@@ -1,4 +1,4 @@
-package utn.tif.trabajo_integrador_final.models;
+package utn.tif.trabajo_integrador_final.entities;
 
 import utn.tif.trabajo_integrador_final.constants.Roles;
 import utn.tif.trabajo_integrador_final.utils.Id_generator;
@@ -19,7 +19,7 @@ public class Usuario {
     private LocalDate createdAt;
     private LocalDate modifiedAt;
     private LocalDate passLastMod;
-    private List<String> roles; // viene de roles_usuario
+    private List<String> roles;
 
     public Usuario() {
         this.roles = new ArrayList<>();

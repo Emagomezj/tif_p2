@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utn.tif.trabajo_integrador_final.DAOS.LibroDAO;
 import utn.tif.trabajo_integrador_final.exceptions.EntityNotFoundException;
-import utn.tif.trabajo_integrador_final.models.Libro;
+import utn.tif.trabajo_integrador_final.entities.Libro;
 import utn.tif.trabajo_integrador_final.utils.Id_generator;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,36 +24,36 @@ public class LibroService {
     }
 
 
-    private void validateLibro(Libro libro, boolean isUpdate) throws Exception {
+    private void validateLibro(Libro libro, boolean isUpdate)  {
         if (libro == null)
-            throw new Exception("El libro no puede ser nulo.");
+            throw new IllegalArgumentException("El libro no puede ser nulo.");
 
         if (isNullOrEmpty(libro.getTitulo()))
-            throw new Exception("El título del libro es obligatorio.");
+            throw new IllegalArgumentException("El título del libro es obligatorio.");
 
         if (isNullOrEmpty(libro.getAutor()))
-            throw new Exception("El autor del libro es obligatorio.");
+            throw new IllegalArgumentException("El autor del libro es obligatorio.");
 
         if (isNullOrEmpty(libro.getEditorial()))
-            throw new Exception("La editorial es obligatoria.");
+            throw new IllegalArgumentException("La editorial es obligatoria.");
 
-        if (libro.getAnioEdicion() != null && (libro.getAnioEdicion() < 1400 || libro.getAnioEdicion() > 2100))
-            throw new Exception("El año de edición debe estar entre 1400 y 2100.");
+        if (libro.getAnioEdicion() != null && (libro.getAnioEdicion() > Year.now().getValue()))
+            throw new IllegalArgumentException("El año de edición debe ser real.");
 
         if (libro.getExistencias() == null || libro.getExistencias() < 0)
-            throw new Exception("Las existencias no pueden ser negativas ni nulas.");
+            throw new IllegalArgumentException("Las existencias no pueden ser negativas ni nulas.");
 
         if (libro.getDisponibles() == null || libro.getDisponibles() < 0)
-            throw new Exception("Los ejemplares disponibles no pueden ser negativos ni nulos.");
+            throw new IllegalArgumentException("Los ejemplares disponibles no pueden ser negativos ni nulos.");
 
         if (libro.getDisponibles() > libro.getExistencias())
-            throw new Exception("Los ejemplares disponibles no pueden superar las existencias totales.");
+            throw new IllegalArgumentException("Los ejemplares disponibles no pueden superar las existencias totales.");
 
         if (!isNullOrEmpty(libro.getIsbn()) && !isValidIsbn(libro.getIsbn()))
-            throw new Exception("El ISBN no es válido. Debe tener formato ISBN-10 o ISBN-13.");
+            throw new IllegalArgumentException("El ISBN no es válido. Debe tener formato ISBN-10 o ISBN-13.");
 
         if (isUpdate && isNullOrEmpty(libro.getId()))
-            throw new Exception("El ID del libro es obligatorio para actualizar.");
+            throw new IllegalArgumentException("El ID del libro es obligatorio para actualizar.");
     }
 
     private boolean isNullOrEmpty(String value) {
@@ -64,15 +65,15 @@ public class LibroService {
         return Pattern.matches("\\d{10}|\\d{13}", clean);
     }
 
-    public Libro createLibro(Libro libro) throws Exception {
+    public Libro createLibro(Libro libro)  {
         libro.setId(Id_generator.generarId());
         validateLibro(libro, false);
         return libroDAO.save(libro);
     }
 
-    public List<Libro> bulkCreateLibros(List<Libro> libros) throws Exception {
+    public List<Libro> bulkCreateLibros(List<Libro> libros)  {
         if (libros == null || libros.isEmpty())
-            throw new Exception("La lista de libros a crear no puede estar vacía.");
+            throw new IllegalArgumentException("La lista de libros a crear no puede estar vacía.");
 
         for (Libro libro : libros) {
             libro.setId(Id_generator.generarId());
@@ -81,27 +82,27 @@ public class LibroService {
         return libroDAO.bulkCreate(libros);
     }
 
-    public Optional<Libro> findById(String id) throws Exception {
+    public Optional<Libro> findById(String id)  {
         if (isNullOrEmpty(id))
-            throw new Exception("El ID del libro no puede ser nulo o vacío.");
+            throw new IllegalArgumentException("El ID del libro no puede ser nulo o vacío.");
 
         return Optional.ofNullable(libroDAO.findById(id));
     }
 
-    public List<Libro> getAll() throws Exception {
+    public List<Libro> getAll()  {
         return libroDAO.findAll();
     }
 
-    public List<Libro> findManyById(List<String> ids) throws Exception {
+    public List<Libro> findManyById(List<String> ids)  {
         if (ids == null || ids.isEmpty())
-            throw new Exception("La lista de IDs no puede estar vacía.");
+            throw new IllegalArgumentException("La lista de IDs no puede estar vacía.");
 
         return libroDAO.findMany(ids);
     }
 
-    public Libro updateLibro(Libro libro) throws Exception {
+    public Libro updateLibro(Libro libro)  {
         if (isNullOrEmpty(libro.getId()))
-            throw new Exception("El ID del libro es obligatorio para actualizar.");
+            throw new IllegalArgumentException("El ID del libro es obligatorio para actualizar.");
 
         Libro libroActual = libroDAO.findById(libro.getId());
         if (libroActual == null)
@@ -124,15 +125,15 @@ public class LibroService {
         return libroDAO.updateOne(libroActual);
     }
 
-    public List<Libro> updateManyLibros(List<Libro> librosParciales) throws Exception {
+    public List<Libro> updateManyLibros(List<Libro> librosParciales)  {
         if (librosParciales == null || librosParciales.isEmpty())
-            throw new Exception("La lista de libros a actualizar no puede estar vacía.");
+            throw new IllegalArgumentException("La lista de libros a actualizar no puede estar vacía.");
 
         List<Libro> librosActualizados = new ArrayList<>();
 
         for (Libro libroParcial : librosParciales) {
             if (isNullOrEmpty(libroParcial.getId()))
-                throw new Exception("Cada libro a actualizar debe tener un ID.");
+                throw new IllegalArgumentException("Cada libro a actualizar debe tener un ID.");
 
             Libro libroActual = libroDAO.findById(libroParcial.getId());
             if (libroActual == null)
@@ -158,30 +159,30 @@ public class LibroService {
     }
 
 
-    public void deleteLibro(String id) throws Exception {
+    public void deleteLibro(String id)  {
         if (isNullOrEmpty(id))
-            throw new Exception("El ID del libro a eliminar no puede estar vacío.");
+            throw new IllegalArgumentException("El ID del libro a eliminar no puede estar vacío.");
 
         libroDAO.deleteOne(id);
     }
 
-    public void deleteManyLibros(List<String> ids) throws Exception {
+    public void deleteManyLibros(List<String> ids)  {
         if (ids == null || ids.isEmpty())
-            throw new Exception("La lista de IDs a eliminar no puede estar vacía.");
+            throw new IllegalArgumentException("La lista de IDs a eliminar no puede estar vacía.");
 
         libroDAO.deleteMany(ids);
     }
 
-    public void totalDeleteOne(String id) throws Exception {
+    public void totalDeleteOne(String id)  {
         if (isNullOrEmpty(id))
-            throw new Exception("El ID del libro a eliminar físicamente no puede estar vacío.");
+            throw new IllegalArgumentException("El ID del libro a eliminar físicamente no puede estar vacío.");
 
         libroDAO.totalDeleteOne(id);
     }
 
-    public void totalDeleteMany(List<String> ids) throws Exception {
+    public void totalDeleteMany(List<String> ids)  {
         if (ids == null || ids.isEmpty())
-            throw new Exception("La lista de IDs a eliminar físicamente no puede estar vacía.");
+            throw new IllegalArgumentException("La lista de IDs a eliminar físicamente no puede estar vacía.");
 
         libroDAO.totalDeleteMany(ids);
     }

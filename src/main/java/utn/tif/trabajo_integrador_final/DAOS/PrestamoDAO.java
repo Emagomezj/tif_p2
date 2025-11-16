@@ -1,6 +1,6 @@
 package utn.tif.trabajo_integrador_final.DAOS;
 
-import utn.tif.trabajo_integrador_final.models.Prestamo;
+import utn.tif.trabajo_integrador_final.entities.Prestamo;
 import utn.tif.trabajo_integrador_final.utils.CustomTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,7 +33,7 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
     }
 
     @Override
-    public Prestamo save(Prestamo entity) throws Exception {
+    public Prestamo save(Prestamo entity)  {
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -75,12 +75,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al guardar el préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al guardar el préstamo: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Prestamo> bulkCreate(List<Prestamo> entities) throws Exception {
+    public List<Prestamo> bulkCreate(List<Prestamo> entities)  {
         List<Prestamo> saved = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -123,12 +123,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al crear préstamos en lote: " + e.getMessage(), e);
+            throw new RuntimeException("Error al crear préstamos en lote: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public Prestamo findById(String id) throws Exception {
+    public Prestamo findById(String id)  {
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -149,12 +149,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return prestamo;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar el préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar el préstamo: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Prestamo> findAll() throws Exception {
+    public List<Prestamo> findAll()  {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -175,12 +175,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar todos los préstamos: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar todos los préstamos: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Prestamo> findMany(List<String> ids) throws Exception {
+    public List<Prestamo> findMany(List<String> ids)  {
         List<Prestamo> list = new ArrayList<>();
         if (ids.isEmpty()) return list;
 
@@ -208,12 +208,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar múltiples préstamos: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar múltiples préstamos: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public Prestamo updateOne(Prestamo entity) throws Exception {
+    public Prestamo updateOne(Prestamo entity)  {
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -248,12 +248,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al actualizar el préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al actualizar el préstamo: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Prestamo> updateMany(List<Prestamo> entities) throws Exception {
+    public List<Prestamo> updateMany(List<Prestamo> entities)  {
         List<Prestamo> updated = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -289,12 +289,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al actualizar múltiples préstamos: " + e.getMessage(), e);
+            throw new RuntimeException("Error al actualizar múltiples préstamos: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void deleteOne(String id) throws Exception {
+    public void deleteOne(String id)  {
         try {
             transactionManager.begin();
             Connection conn = transactionManager.getConnection();
@@ -314,12 +314,12 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al eliminar el préstamo: " + e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar el préstamo: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void deleteMany(List<String> ids) throws Exception {
+    public void deleteMany(List<String> ids)  {
         if (ids == null || ids.isEmpty()) return;
 
         try {
@@ -340,11 +340,11 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al eliminar múltiples préstamos: " + e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar múltiples préstamos: " + e.getMessage(), e);
         }
     }
 
-    public List<Prestamo> findByUserId(String userId) throws Exception {
+    public List<Prestamo> findByUserId(String userId)  {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -367,11 +367,11 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar préstamos por usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar préstamos por usuario: " + e.getMessage(), e);
         }
     }
 
-    public List<Prestamo> findByLibroId(String libroId) throws Exception {
+    public List<Prestamo> findByLibroId(String libroId)  {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -394,11 +394,11 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar préstamos por libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar préstamos por libro: " + e.getMessage(), e);
         }
     }
 
-    public List<Prestamo> findByEstado(String estado) throws Exception {
+    public List<Prestamo> findByEstado(String estado)  {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -421,11 +421,11 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar préstamos por estado: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar préstamos por estado: " + e.getMessage(), e);
         }
     }
 
-    public List<Prestamo> findPrestamosVencidos() throws Exception {
+    public List<Prestamo> findPrestamosVencidos()  {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -446,10 +446,10 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar préstamos vencidos: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar préstamos vencidos: " + e.getMessage(), e);
         }
     }
-    public List<Prestamo> findPrestamosVencidos_update() throws Exception {
+    public List<Prestamo> findPrestamosVencidos_update()  {
         List<Prestamo> list = new ArrayList<>();
         try {
             transactionManager.begin();
@@ -470,7 +470,7 @@ public class PrestamoDAO implements GenericDAO<Prestamo> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar préstamos vencidos: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar préstamos vencidos: " + e.getMessage(), e);
         }
     }
 }

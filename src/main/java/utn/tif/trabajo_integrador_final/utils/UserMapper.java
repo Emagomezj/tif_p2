@@ -1,6 +1,6 @@
 package utn.tif.trabajo_integrador_final.utils;
 
-import utn.tif.trabajo_integrador_final.models.Usuario;
+import utn.tif.trabajo_integrador_final.entities.Usuario;
 import utn.tif.trabajo_integrador_final.DTOs.UserRequestDTO;
 import utn.tif.trabajo_integrador_final.DTOs.UserResponseDTO;
 

@@ -7,7 +7,8 @@ import utn.tif.trabajo_integrador_final.DTOs.UserRequestDTO;
 import utn.tif.trabajo_integrador_final.DTOs.UserResponseDTO;
 import utn.tif.trabajo_integrador_final.DTOs.UserUpdateDTO;
 import utn.tif.trabajo_integrador_final.exceptions.EntityNotFoundException;
-import utn.tif.trabajo_integrador_final.models.Usuario;
+import utn.tif.trabajo_integrador_final.entities.Usuario;
+import utn.tif.trabajo_integrador_final.exceptions.NotEnoughPrivilegesException;
 import utn.tif.trabajo_integrador_final.utils.Hasher;
 import utn.tif.trabajo_integrador_final.utils.Id_generator;
 import utn.tif.trabajo_integrador_final.utils.UserMapper;
@@ -45,7 +46,10 @@ public class UserService {
         user.setPassLastMod(LocalDate.now());
         return user;
     }
-    public UserResponseDTO create(UserRequestDTO dto) throws Exception {
+    public UserResponseDTO create(UserRequestDTO dto)  {
+        if(dto.getFechaNac().isBefore(LocalDate.of(1900,1,1))){
+            throw new IllegalArgumentException("Fecha de nacimiento invalido");
+        }
         Usuario user = convertDTOToEntity_Create(dto);
 
         Usuario response = userDAO.save(user);
@@ -55,6 +59,9 @@ public class UserService {
         try{
             List<Usuario> users = new ArrayList<>();
             for (UserRequestDTO dto : userDTOs) {
+                if(dto.getFechaNac().isBefore(LocalDate.of(1900,1,1))){
+                    throw new IllegalArgumentException("Fecha de nacimiento invalido");
+                }
                 Usuario user = convertDTOToEntity_Create(dto);
                 users.add(user);
             }
@@ -68,7 +75,7 @@ public class UserService {
             throw new RuntimeException("Error al crear usuarios",e);
         }
     }
-    public UserResponseDTO findById(String id) throws Exception {
+    public UserResponseDTO findById(String id)  {
         Usuario user = userDAO.findById(id);
         if (user == null){
             throw new EntityNotFoundException("User not found");
@@ -100,11 +107,11 @@ public class UserService {
             throw new RuntimeException("Error al buscar usuarios",e);
         }
     }
-    public HashMap<String, Object> checkAuth(String email, String password) throws Exception{
+    public HashMap<String, Object> checkAuth(String email, String password) {
         try{
             Usuario user = userDAO.findByEmail(email);
             if (user == null){
-                throw new Exception("User not found");
+                throw new EntityNotFoundException("User not found");
             }
             if (hasher.checkHash(password, user.getHash())) {
                 HashMap<String, Object> response = new HashMap<>();
@@ -121,16 +128,14 @@ public class UserService {
                 }
                 return response;
             } else {
-                HashMap<String, Object> response = new HashMap<>();
-                response.put("success", false);
-                response.put("message", "Invalid password");
-                return response;
+                throw new NotEnoughPrivilegesException("Invalid password");
             }
         } catch (Exception e) {
-            throw new Exception("Authentication failed: " + e.getMessage());
+            //Acá entendemos que deberíamos crear una excepción específica para el login fallido, pero como no trabajamos con login real utilizamos not enough privileges
+            throw new NotEnoughPrivilegesException("Authentication failed: " + e.getMessage());
         }
     }
-    public UserResponseDTO update(String id, UserUpdateDTO dto) throws Exception {
+    public UserResponseDTO update(String id, UserUpdateDTO dto)  {
         Usuario user = userDAO.findById(id);
         if (user == null){
             throw new EntityNotFoundException("User not found");
@@ -145,7 +150,7 @@ public class UserService {
         Usuario response = userDAO.updateOne(user);
         return UserMapper.toResponse(response);
     }
-    public List<UserResponseDTO> updateMany(List<UserUpdateDTO> dtos) throws Exception {
+    public List<UserResponseDTO> updateMany(List<UserUpdateDTO> dtos)  {
         List<Usuario> users = new ArrayList<>();
         for (UserUpdateDTO dto: dtos){
             Usuario user = userDAO.findById(dto.getId());
@@ -168,22 +173,32 @@ public class UserService {
         }
         return response;
     }
-    public void deleteById(String id) throws Exception {
+    public void deleteById(String id) {
         Usuario user = userDAO.findById(id);
         if (user == null){
             throw new EntityNotFoundException("User not found");
         }
         userDAO.deleteOne(id);
     }
-    public void deleteMany(List<String> ids) throws Exception {
+    public void deleteMany(List<String> ids) {
         List<Usuario> users = userDAO.findMany(ids);
         userDAO.deleteMany(ids);
     }
 
-    public void totalDeleteOne(String id) throws Exception {
+    public void totalDeleteOne(String id) {
+        Usuario user = userDAO.iFindById(id);
+        if (user == null){
+            throw new EntityNotFoundException("User not found");
+        }
         userDAO.totalDeleteOne(id);
     }
-    public void totalDeleteMany(List<String> ids) throws Exception {
+    public void totalDeleteMany(List<String> ids) {
+        for (String id: ids){
+            Usuario user = userDAO.iFindById(id);
+            if (user == null){
+                throw new EntityNotFoundException("User not found: ", id);
+            }
+        }
         userDAO.totalDeleteMany(ids);
     }
 }

@@ -1,7 +1,7 @@
 package utn.tif.trabajo_integrador_final.DAOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import utn.tif.trabajo_integrador_final.models.Libro;
+import utn.tif.trabajo_integrador_final.entities.Libro;
 import utn.tif.trabajo_integrador_final.utils.CustomTransactionManager;
 
 import java.sql.*;
@@ -36,7 +36,7 @@ public class LibroDAO implements GenericDAO<Libro> {
     }
 
     @Override
-    public Libro save(Libro entity) throws Exception {
+    public Libro save(Libro entity)  {
         String sql = "INSERT INTO libros (id, isbn, titulo, autor, editorial, anio_edicion, " +
                 "clasificacion_dewey, estanteria, idioma, existencias, disponibles, eliminado) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -66,12 +66,12 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al guardar libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al guardar libro: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Libro> bulkCreate(List<Libro> entities) throws Exception {
+    public List<Libro> bulkCreate(List<Libro> entities)  {
         if (entities == null || entities.isEmpty()) return Collections.emptyList();
 
         String sql = "INSERT INTO libros (id, isbn, titulo, autor, editorial, anio_edicion, " +
@@ -105,11 +105,34 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error en bulkCreate libros: " + e.getMessage(), e);
+            throw new RuntimeException("Error en bulkCreate libros: " + e.getMessage(), e);
         }
     }
+
+    public Libro iFindById(String id)  {
+        String sql = "SELECT * FROM libros WHERE id = ?";
+        try {
+            transactionManager.begin();
+            Connection conn = transactionManager.getConnection();
+            Libro libro = null;
+
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) libro = mapRowToLibro(rs);
+                }
+            }
+
+            transactionManager.closeConnection();
+            return libro;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar libro: " + e.getMessage(), e);
+        }
+    }
+
     @Override
-    public Libro findById(String id) throws Exception {
+    public Libro findById(String id)  {
         String sql = "SELECT * FROM libros WHERE id = ? AND eliminado = FALSE";
         try {
             transactionManager.begin();
@@ -127,12 +150,12 @@ public class LibroDAO implements GenericDAO<Libro> {
             return libro;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar libro: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Libro> findAll() throws Exception {
+    public List<Libro> findAll()  {
         String sql = "SELECT * FROM libros WHERE eliminado = FALSE";
         List<Libro> list = new ArrayList<>();
 
@@ -149,12 +172,12 @@ public class LibroDAO implements GenericDAO<Libro> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al obtener todos los libros: " + e.getMessage(), e);
+            throw new RuntimeException("Error al obtener todos los libros: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Libro> findMany(List<String> ids) throws Exception {
+    public List<Libro> findMany(List<String> ids)  {
         if (ids == null || ids.isEmpty()) return Collections.emptyList();
 
         String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
@@ -176,11 +199,11 @@ public class LibroDAO implements GenericDAO<Libro> {
             return list;
 
         } catch (SQLException e) {
-            throw new Exception("Error al buscar múltiples libros: " + e.getMessage(), e);
+            throw new RuntimeException("Error al buscar múltiples libros: " + e.getMessage(), e);
         }
     }
     @Override
-    public Libro updateOne(Libro entity) throws Exception {
+    public Libro updateOne(Libro entity)  {
         String sql = "UPDATE libros SET isbn=?, titulo=?, autor=?, editorial=?, anio_edicion=?, " +
                 "clasificacion_dewey=?, estanteria=?, idioma=?, existencias=?, disponibles=?, eliminado=? " +
                 "WHERE id=?";
@@ -210,12 +233,12 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al actualizar libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al actualizar libro: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Libro> updateMany(List<Libro> entities) throws Exception {
+    public List<Libro> updateMany(List<Libro> entities)  {
         if (entities == null || entities.isEmpty()) return Collections.emptyList();
         try {
             transactionManager.begin();
@@ -225,11 +248,11 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (Exception e) {
             transactionManager.rollback();
-            throw new Exception("Error al actualizar varios libros: " + e.getMessage(), e);
+            throw new RuntimeException("Error al actualizar varios libros: " + e.getMessage(), e);
         }
     }
     @Override
-    public void deleteOne(String id) throws Exception {
+    public void deleteOne(String id)  {
         String sql = "UPDATE libros SET eliminado = TRUE WHERE id = ?";
         try {
             transactionManager.begin();
@@ -244,12 +267,12 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al eliminar lógicamente libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar lógicamente libro: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public void deleteMany(List<String> ids) throws Exception {
+    public void deleteMany(List<String> ids)  {
         if (ids == null || ids.isEmpty()) return;
 
         String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
@@ -268,11 +291,11 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al eliminar varios libros: " + e.getMessage(), e);
+            throw new RuntimeException("Error al eliminar varios libros: " + e.getMessage(), e);
         }
     }
 
-    public void totalDeleteOne(String id) throws Exception {
+    public void totalDeleteOne(String id)  {
         String sql = "DELETE FROM libros WHERE id = ?";
         try {
             transactionManager.begin();
@@ -285,11 +308,11 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al borrar físicamente libro: " + e.getMessage(), e);
+            throw new RuntimeException("Error al borrar físicamente libro: " + e.getMessage(), e);
         }
     }
 
-    public void totalDeleteMany(List<String> ids) throws Exception {
+    public void totalDeleteMany(List<String> ids)  {
         if (ids == null || ids.isEmpty()) return;
 
         String placeholders = String.join(",", Collections.nCopies(ids.size(), "?"));
@@ -306,7 +329,7 @@ public class LibroDAO implements GenericDAO<Libro> {
 
         } catch (SQLException e) {
             transactionManager.rollback();
-            throw new Exception("Error al borrar físicamente varios libros: " + e.getMessage(), e);
+            throw new RuntimeException("Error al borrar físicamente varios libros: " + e.getMessage(), e);
         }
     }
 }

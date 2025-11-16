@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utn.tif.trabajo_integrador_final.models.Libro;
+import utn.tif.trabajo_integrador_final.entities.Libro;
 import utn.tif.trabajo_integrador_final.Services.LibroService;
+import utn.tif.trabajo_integrador_final.exceptions.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,133 +23,73 @@ public class LibroController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createLibro(@RequestBody Libro libro) {
-        try {
-            Libro created = libroService.createLibro(libro);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al crear el libro: " + e.getMessage());
-        }
+    public ResponseEntity<Libro> createLibro(@RequestBody Libro libro) {
+        Libro created = libroService.createLibro(libro);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<?> createManyLibros(@RequestBody List<Libro> libros) {
-        try {
-            List<Libro> created = libroService.bulkCreateLibros(libros);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al crear los libros: " + e.getMessage());
-        }
+    public ResponseEntity<List<Libro>> createManyLibros(@RequestBody List<Libro> libros) {
+        List<Libro> created = libroService.bulkCreateLibros(libros);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllLibros() {
-        try {
-            List<Libro> found = libroService.getAll();
-            if (found.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
-            return ResponseEntity.ok(found);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al listar libros: " + e.getMessage());
+    public ResponseEntity<List<Libro>> getAllLibros() {
+        List<Libro> found = libroService.getAll();
+        if (found.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
+        return ResponseEntity.ok(found);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable String id) {
-        try {
-            Optional<Libro> found = libroService.findById(id);
-            if (found.isPresent()) {
-                return ResponseEntity.ok(found.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Libro no encontrado con ID: " + id);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al buscar libro: " + e.getMessage());
-        }
+    public ResponseEntity<Libro> findById(@PathVariable String id) {
+        Optional<Libro> found = libroService.findById(id);
+        return found.map(ResponseEntity::ok)
+                .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado con ID: " + id));
     }
 
     @GetMapping("/many")
     public ResponseEntity<List<Libro>> findMany(@RequestBody List<String> ids) {
-        try {
-            List<Libro> libros = libroService.findManyById(ids);
-
-            return ResponseEntity.ok(libros);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<Libro> libros = libroService.findManyById(ids);
+        return ResponseEntity.ok(libros);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateLibro(@PathVariable String id, @RequestBody Libro libro) {
-        try {
-            libro.setId(id);
-            Libro updated = libroService.updateLibro(libro);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar el libro: " + e.getMessage());
-        }
+    public ResponseEntity<Libro> updateLibro(@PathVariable String id, @RequestBody Libro libro) {
+        libro.setId(id);
+        Libro updated = libroService.updateLibro(libro);
+        return ResponseEntity.ok(updated);
     }
 
     @PutMapping("/bulk")
-    public ResponseEntity<?> updateManyLibros(@RequestBody List<Libro> libros) {
-        try {
-            List<Libro> updated = libroService.updateManyLibros(libros);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar varios libros: " + e.getMessage());
-        }
+    public ResponseEntity<List<Libro>> updateManyLibros(@RequestBody List<Libro> libros) {
+        List<Libro> updated = libroService.updateManyLibros(libros);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLibro(@PathVariable String id) {
-        try {
-            libroService.deleteLibro(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al eliminar libro: " + e.getMessage());
-        }
+    public ResponseEntity<Void> deleteLibro(@PathVariable String id) {
+        libroService.deleteLibro(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/bulk")
-    public ResponseEntity<?> deleteMany(@RequestBody List<String> ids) {
-        try {
-            libroService.deleteManyLibros(ids);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al eliminar varios libros: " + e.getMessage());
-        }
+    public ResponseEntity<Void> deleteMany(@RequestBody List<String> ids) {
+        libroService.deleteManyLibros(ids);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/total/{id}")
-    public ResponseEntity<?> totalDeleteOne(@PathVariable String id) {
-        try {
-            libroService.totalDeleteOne(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al eliminar físicamente el libro: " + e.getMessage());
-        }
+    public ResponseEntity<Void> totalDeleteOne(@PathVariable String id) {
+        libroService.totalDeleteOne(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/total")
-    public ResponseEntity<?> totalDeleteMany(@RequestBody List<String> ids) {
-        try {
-            libroService.totalDeleteMany(ids);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al eliminar físicamente varios libros: " + e.getMessage());
-        }
+    public ResponseEntity<Void> totalDeleteMany(@RequestBody List<String> ids) {
+        libroService.totalDeleteMany(ids);
+        return ResponseEntity.noContent().build();
     }
 }
