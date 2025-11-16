@@ -60,6 +60,7 @@ src/ <br>
 ## Instrucciones de Uso
 
 ### Por IDE
+Antes de comenzar debe crear el arvicho .env siguiendo la estructura del archivo .env.example completando con los datos correctos
 1. Abrir el proyecto con un IDE que permita el uso de consola(VSCode, IntelliJ, NetBeans)
 2. Abrir la consola (Debería abrirse en el directorio raíz del proyecto, en caso de no ser así, ir con cd hasta el mismo)
 3. Ejecutar el comando:
@@ -77,6 +78,7 @@ src/ <br>
    ```
 
 ### Por consola
+Antes de comenzar debe crear el arvicho .env siguiendo la estructura del archivo .env.example completando con los datos correctos
 1. Abrir la consola desde el directorio raíz del proyecto o navegar hasta el mismo
 2. Ejecutar el comando:
     ```bash 
@@ -100,13 +102,12 @@ No se listan porque se crea un lote de 5000 libros ficticios al inicializar el p
 
 ### Usuarios
 
-| Usuario | Email | Rol         |
-|---------|-------|-------------|
-| Admin Principal | admin@tif.com | ADMIN, USER |
-| Juan Pérez | juan@example.com | USER        |
-| Maria Gomez | maria@example.com | USER        |
-| Ana Librera | bibliotecaria@tif.com | ADMIN, USER |
-
+| Usuario | Email | Rol         | Contraseña
+|---------|-------|-------------|---------|
+| Admin Principal | admin@tif.com | ADMIN, USER |admin123|
+| Juan Pérez | juan@example.com | USER        |12345678|
+| Maria Gomez | maria@example.com | USER        |87654321|
+| Ana Librera | bibliotecaria@tif.com | ADMIN, USER |biblioteca2024|
 
 ## Endpoints y colección de prueba en postman
 
@@ -116,6 +117,7 @@ Desde postman cargar la colección, la misma se encuentra en:<br>
 Directorio raíz -> main -> resources -> TIF_P2.postman_collection.json
 
 ### Variables de Entorno
+
 ```bash
 # En Postman, configurar las variables:
 base_url: http://localhost:8080/api
