@@ -9,11 +9,11 @@ Proyecto desarrollado en **Java** con **Spring Boot** para gestionar una bibliot
 - Java 17+
 - Spring Boot 3.5.7
 - Spring Security
-- Spring Data / JDBC
+- JDBC
 - MySQL 8+
 - JUnit 5
 - Mockito
-- Maven / Gradle
+- Maven
 - H2 (para tests en memoria)
 
 ---
