@@ -1,4 +1,4 @@
-# Trabajo Integrador Final
+# Trabajo Integrador Final - API
 
 Proyecto desarrollado en **Java** con **Spring Boot** para gestionar una biblioteca, con usuarios, libros y préstamos. Incluye manejo de roles, encriptación de contraseñas y carga inicial de datos.
 
